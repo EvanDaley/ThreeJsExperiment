@@ -27,12 +27,12 @@ function setupModel(data) {
     const radiansPerSecond = MathUtils.degToRad(-3);
 
     group.tick = (delta) => {
-        for (const object of updatables) {
-            object.tick(delta);
-        }
+        // for (const object of updatables) {
+        //     object.tick(delta);
+        // }
 
-        group.rotation.x += radiansPerSecond * delta;
-        group.rotation.y += radiansPerSecond * delta;
+        // group.rotation.x += radiansPerSecond * delta;
+        // group.rotation.y += radiansPerSecond * delta;
     };
 
     console.log(group)

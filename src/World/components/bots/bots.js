@@ -13,7 +13,7 @@ async function loadBots() {
   
     const chad = setupModel(chadData);
     
-    chad.position.set(0, 0, 2.5);
+    chad.position.set(0, -10, -2.5);
 
     return {
       chad,
