@@ -6,10 +6,10 @@ async function loadBots() {
     const loader = new GLTFLoader();
   
     const [chadData] = await Promise.all([
-      loader.loadAsync('models/Chad.glb'),
+      loader.loadAsync('models/ChadRobot.glb'),
     ]);
   
-    console.log('Squaaawk!', chadData);
+    console.log('load!', chadData);
   
     const chad = setupModel(chadData);
     
