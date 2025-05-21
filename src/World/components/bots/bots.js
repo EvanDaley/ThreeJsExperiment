@@ -5,18 +5,18 @@ import { setupModel } from './setupModel.js';
 async function loadBots() {
     const loader = new GLTFLoader();
   
-    const [chadData] = await Promise.all([
+    const [robotData] = await Promise.all([
       loader.loadAsync('models/ChadRobot.glb'),
     ]);
   
-    console.log('load!', chadData);
+    console.log('load!', robotData);
   
-    const chad = setupModel(chadData);
+    const robot = setupModel(robotData);
     
-    chad.position.set(0, 0, -2.5);
+    robot.position.set(0, 0, -2.5);
 
     return {
-      chad,
+      robot,
     };
   }
 

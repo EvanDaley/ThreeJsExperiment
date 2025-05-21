@@ -2,6 +2,9 @@ import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
 import { loadBots } from './components/bots/bots.js';
+import { loadComputer } from './components/computer/computer.js';
+import { loadGround } from './components/ground/ground.js';
+
 import { createGround } from './components/ground.js'
 import { createBackgroundParticles } from './components/particles';
 
@@ -89,16 +92,21 @@ class World {
   }
 
   async init() {
-    const { chad } = await loadBots()
+    const { robot } = await loadBots()
+    const { computer } = await loadComputer()
+    const { ground } = await loadGround()
 
     // const camTarget = chad.position + (new Vector3(0,-1,0))
 
+    controls.target.copy(robot.position)
 
-    controls.target.copy(chad.position)
+    loop.updatables.push(robot)
+    loop.updatables.push(computer)
+    loop.updatables.push(ground)
 
-    loop.updatables.push(chad)
-
-    scene.add(chad)
+    scene.add(robot)
+    scene.add(computer)
+    scene.add(ground)
 
     resizer.onResize()
   }
@@ -127,7 +135,7 @@ class World {
 
     // console.log(intersects);
     for (const hit of intersects) {
-      // console.log(hit.object.name);
+      console.log(hit.object.name);
   
       if (hit.object.name == 'Profiler') {
         this.incrementProgress()
