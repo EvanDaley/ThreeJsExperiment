@@ -32,9 +32,23 @@ class World {
     this.createSceneObjects()
     this.createParticleSystems()
 
-    this.score = 1;
+    // An amount we multiply the previous level's XP requirement by to get to the next level
+    this.levelIncrementMultiplier = 1.68;
+    this.nextXpNeeded = 5;
+
+    this.score = 0;
+    this.xp = 1;
+    this.level = 1;
     this.raycaster = new Raycaster();
     this.pointer = new Vector2();
+
+    this.funds = 0;
+
+    this.scoreDisplay = document.getElementById('score-display');
+    this.xpDisplay = document.getElementById('xp-display');
+    this.levelDisplay = document.getElementById('level-display');
+    this.fundsDisplay = document.getElementById('funds-display');
+
     container.addEventListener('pointerdown', this.onPointerDown.bind(this));
   }
 
@@ -116,16 +130,45 @@ class World {
       // console.log(hit.object.name);
   
       if (hit.object.name == 'Profiler') {
-        console.log(`Score: ${this.score}`);
-
-        this.score += 1;
-        const scoreDisplay = document.getElementById('score-display');
-        if (scoreDisplay) {
-          scoreDisplay.textContent = `Filings Completed: ${this.score}`;
-        }
-        
+        this.incrementProgress()
+        this.incrementXp()
+        this.incrementFunds()
         break;
       }
+    }
+  }
+
+  incrementProgress() {
+    this.score += 1;
+
+    if (this.scoreDisplay) {
+      this.scoreDisplay.textContent = `Filings Completed: ${this.score}`;
+    }
+  }
+
+  incrementXp() {
+    this.xp += 1;
+
+    if (this.xpDisplay) {
+      this.xpDisplay.textContent = `Experience: ${this.xp} / ${this.nextXpNeeded}`;
+    }
+
+    if (this.xp >= this.nextXpNeeded) {
+      this.nextXpNeeded = Math.floor(this.nextXpNeeded * this.levelIncrementMultiplier);
+      this.xp = 0;
+      this.level += 1;
+
+      if (this.xpDisplay) {
+        this.levelDisplay.textContent = `Mastery Level: ${this.level}`;
+      }
+    }
+  }
+
+  incrementFunds() {
+    this.funds += 10;
+
+    if (this.fundsDisplay) {
+      this.fundsDisplay.textContent = `Funds: $${this.funds}`;
     }
   }
   

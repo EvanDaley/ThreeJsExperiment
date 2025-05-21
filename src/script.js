@@ -4,7 +4,7 @@ import { gsap, ScrollTrigger, CSSRulePlugin } from "gsap/all";
 
 async function main() {
   await initThreeJSWorld()
-  await initContentAnimations()
+  // await initContentAnimations()
 }
 
 async function initThreeJSWorld() {

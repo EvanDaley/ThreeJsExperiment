@@ -4,7 +4,7 @@ function setupModel(data) {
     const group = new Group()
     const updatables = []
 
-    console.log(data)
+    // console.log(data)
     for (let i = 0; i < data.scene.children.length; i++) {
         const model = data.scene.children[0];
 
