@@ -146,6 +146,12 @@ class World {
 
       if (hit.object.name == 'Computer') {
         console.log('Computer clicked');
+
+        const modal = document.getElementById('upgrade-modal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
+
         break;
       }
     }
