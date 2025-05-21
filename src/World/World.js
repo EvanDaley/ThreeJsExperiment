@@ -135,12 +135,17 @@ class World {
 
     // console.log(intersects);
     for (const hit of intersects) {
-      console.log(hit.object.name);
+      // console.log(hit.object.name);
   
       if (hit.object.name == 'Profiler') {
         this.incrementProgress()
         this.incrementXp()
         this.incrementFunds()
+        break;
+      }
+
+      if (hit.object.name == 'Computer') {
+        console.log('Computer clicked');
         break;
       }
     }
