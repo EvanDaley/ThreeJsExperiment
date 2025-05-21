@@ -10,8 +10,8 @@ function createControls(camera, canvas) {
     controls.update()
   }
 
-  controls.enableRotate = false;
-  controls.enablePan = false;
+  // controls.enableRotate = false;
+  // controls.enablePan = false;
   controls.enableZoom = false;
 
   return controls;
