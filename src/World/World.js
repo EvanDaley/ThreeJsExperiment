@@ -10,6 +10,7 @@ import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 import { Vector3 } from 'three';
+import { Raycaster, Vector2 } from 'three';
 
 let camera
 let renderer
@@ -20,6 +21,7 @@ let ground
 let container
 let resizer 
 
+
 class World {
   constructor(targetElement) {
     container = targetElement
@@ -29,6 +31,11 @@ class World {
     this.createGameSystems()
     this.createSceneObjects()
     this.createParticleSystems()
+
+    this.score = 1;
+    this.raycaster = new Raycaster();
+    this.pointer = new Vector2();
+    container.addEventListener('pointerdown', this.onPointerDown.bind(this));
   }
 
   createResponsiveScene() {
@@ -93,6 +100,35 @@ class World {
   stop() {
     loop.stop();
   }
+
+  onPointerDown(event) {
+    // console.log('click detected');
+
+    const rect = renderer.domElement.getBoundingClientRect();
+    this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  
+    this.raycaster.setFromCamera(this.pointer, camera);
+    const intersects = this.raycaster.intersectObjects(scene.children, true);
+
+    // console.log(intersects);
+    for (const hit of intersects) {
+      // console.log(hit.object.name);
+  
+      if (hit.object.name == 'Profiler') {
+        console.log(`Score: ${this.score}`);
+
+        this.score += 1;
+        const scoreDisplay = document.getElementById('score-display');
+        if (scoreDisplay) {
+          scoreDisplay.textContent = `Filings Completed: ${this.score}`;
+        }
+        
+        break;
+      }
+    }
+  }
+  
 }
 
 export { World };
