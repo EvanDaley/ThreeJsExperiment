@@ -13,7 +13,13 @@ import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 import { Vector3 } from 'three';
+import * as THREE from 'three';
+// texture.mapping = THREE.EquirectangularReflectionMapping;
+
 import { Raycaster, Vector2 } from 'three';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
+
+// import { EXRLoader } from 'three-stdlib';
 
 let camera
 let renderer
@@ -92,6 +98,17 @@ class World {
   }
 
   async init() {
+    const hdri = await import('@pmndrs/assets/hdri/apartment.exr');
+    const loader = new EXRLoader();
+  
+    loader.load(hdri.default, (texture) => {
+      texture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = texture;
+      scene.background = texture;
+    });
+  
+
+
     const { robot } = await loadBots();
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
@@ -137,19 +154,17 @@ class World {
   
     this.raycaster.setFromCamera(this.pointer, camera);
     const intersects = this.raycaster.intersectObjects(scene.children, true);
-
-    // console.log(intersects);
     for (const hit of intersects) {
-      // console.log(hit.object.name);
-  
-      if (hit.object.name == 'Profiler') {
-        this.incrementProgress()
-        this.incrementXp()
-        this.incrementFunds()
+      console.log(hit.object.name);
+
+      if (hit.object.name.startsWith('1')) {
+        this.incrementProgress();
+        this.incrementXp();
+        this.incrementFunds();
         break;
       }
 
-      if (hit.object.name == 'Computer') {
+      if (hit.object.name.startsWith('2')) {
         console.log('Computer clicked');
 
         const modal = document.getElementById('upgrade-modal');
@@ -160,6 +175,7 @@ class World {
         break;
       }
     }
+
   }
 
   incrementProgress() {
