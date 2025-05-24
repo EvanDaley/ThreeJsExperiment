@@ -14,7 +14,8 @@ import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 import { Vector3 } from 'three';
 import * as THREE from 'three';
-// texture.mapping = THREE.EquirectangularReflectionMapping;
+import { PMREMGenerator } from 'three';
+
 
 import { Raycaster, Vector2 } from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
@@ -22,13 +23,33 @@ import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 // A hack to see errors on the iPhone
 // Todo: turn this off for production!!
 let devMode = true;
+
 if (devMode) {
-  window.onerror = function(message, source, lineno, colno, error) {
-    document.body.innerHTML = `<div style="color:red;">Error: ${message} at ${lineno}:${colno}</div>`;
+  // Create the error overlay container
+  const errorBox = document.createElement('div');
+  errorBox.id = 'dev-error-overlay';
+  errorBox.style.position = 'absolute';
+  errorBox.style.top = '0';
+  errorBox.style.left = '0';
+  errorBox.style.width = '100%';
+  errorBox.style.zIndex = '9999';
+  errorBox.style.background = 'rgba(255, 0, 0, 0.85)';
+  errorBox.style.color = 'white';
+  errorBox.style.padding = '8px';
+  errorBox.style.fontFamily = 'monospace';
+  errorBox.style.fontSize = '14px';
+  errorBox.style.whiteSpace = 'pre-wrap';
+  errorBox.style.pointerEvents = 'none'; // So it doesn't block clicks
+  document.body.appendChild(errorBox);
+  // errorBox.textContent = 'Dev mode enabled';
+
+  // Hook into global error handler
+  window.onerror = function (message, source, lineno, colno, error) {
+    const msg = `🚨 Error: ${message} at ${lineno}:${colno}`;
+    errorBox.textContent = msg;
+    console.error(msg);
   };
 }
-
-// import { EXRLoader } from 'three-stdlib';
 
 let camera
 let renderer
@@ -132,14 +153,27 @@ class World {
   async init() {
     const hdri = await import('@pmndrs/assets/hdri/apartment.exr');
     const loader = new EXRLoader();
-  
-    loader.load(hdri.default, (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      scene.environment = texture;
-      scene.background = texture;
-    });
-  
+    console.error('TEST');
 
+    // const pmremGenerator = new PMREMGenerator(renderer);
+    // pmremGenerator.compileEquirectangularShader();
+
+    loader.load(
+        hdri.default,
+        (texture) => {
+          texture.mapping = THREE.EquirectangularReflectionMapping;
+          scene.environment = texture;
+          scene.background = texture;
+          console.log('HDRI loaded successfully');
+        },
+        undefined,
+        (err) => {
+          console.error('HDRI load failed:', err);
+          document.body.innerHTML = `<div style="color:red;">HDRI load failed: ${err.message || err}</div>`;
+        }
+    );
+
+    console.error('TEST 2');
 
     const { robot } = await loadBots();
     const { computer } = await loadComputer();
@@ -198,7 +232,7 @@ class World {
 
       if (hit.object.name.startsWith('2')) {
         console.log('Computer clicked');
-
+        
         const modal = document.getElementById('upgrade-modal');
         if (modal) {
           modal.style.display = 'flex';
@@ -292,7 +326,6 @@ class World {
 
 
   incrementFunds(numFilings) {
-    asdfasdf
     this.funds += (this.amountPerFiling * numFilings);
 
     if (this.fundsDisplay) {
