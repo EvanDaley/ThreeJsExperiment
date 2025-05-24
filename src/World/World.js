@@ -19,6 +19,15 @@ import * as THREE from 'three';
 import { Raycaster, Vector2 } from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 
+// A hack to see errors on the iPhone
+// Todo: turn this off for production!!
+let devMode = true;
+if (devMode) {
+  window.onerror = function(message, source, lineno, colno, error) {
+    document.body.innerHTML = `<div style="color:red;">Error: ${message} at ${lineno}:${colno}</div>`;
+  };
+}
+
 // import { EXRLoader } from 'three-stdlib';
 
 let camera
@@ -283,6 +292,7 @@ class World {
 
 
   incrementFunds(numFilings) {
+    asdfasdf
     this.funds += (this.amountPerFiling * numFilings);
 
     if (this.fundsDisplay) {
