@@ -92,23 +92,28 @@ class World {
   }
 
   async init() {
-    const { robot } = await loadBots()
-    const { computer } = await loadComputer()
-    const { ground } = await loadGround()
-
-    // const camTarget = chad.position + (new Vector3(0,-1,0))
-
-    controls.target.copy(robot.position)
-
-    loop.updatables.push(robot)
-    loop.updatables.push(computer)
-    loop.updatables.push(ground)
-
-    scene.add(robot)
-    scene.add(computer)
-    scene.add(ground)
-
-    resizer.onResize()
+    const { robot } = await loadBots();
+    const { computer } = await loadComputer();
+    const { ground } = await loadGround();
+  
+    scene.traverse((child) => {
+      if (child.isMesh && child.material && 'envMap' in child.material) {
+        child.material.envMap = envMap;
+        child.material.needsUpdate = true;
+      }
+    });
+  
+    controls.target.copy(robot.position);
+  
+    loop.updatables.push(robot);
+    loop.updatables.push(computer);
+    loop.updatables.push(ground);
+  
+    scene.add(robot);
+    scene.add(computer);
+    scene.add(ground);
+  
+    resizer.onResize();
   }
 
   render() {
