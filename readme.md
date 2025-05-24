@@ -1,5 +1,5 @@
 ## Live Demo
-See the live demo here: https://evandaley.github.io/Three.js-robot-animation/
+See the live demo here: https://evandaley.github.io/ThreeJsExperiment/
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).

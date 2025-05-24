@@ -13,7 +13,7 @@ async function loadBots() {
   
     const robot = setupModel(robotData);
     
-    robot.position.set(0, 0, -2.5);
+    robot.position.set(1, 0, -2.5);
 
     return {
       robot,

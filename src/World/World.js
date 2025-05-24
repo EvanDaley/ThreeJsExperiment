@@ -41,18 +41,41 @@ class World {
     this.createSceneObjects()
     this.createParticleSystems()
 
+    // XP TRACKING
     // An amount we multiply the previous level's XP requirement by to get to the next level
     this.levelIncrementMultiplier = 1.68;
     this.nextXpNeeded = 5;
-
-    this.score = 0;
     this.xp = 1;
     this.level = 1;
+    
+    // BUDGET TRACKING
+    this.amountPerFiling = 10;
+    this.funds = 0;
+    
+    // CLICK TRACKING
     this.raycaster = new Raycaster();
     this.pointer = new Vector2();
 
-    this.funds = 0;
+    // SCORE TRACKING
+    this.incrementMultiplier = 2;   // ** RECEIVES UPGRADES ** 
+    this.score = 0;
+    
+    // AUTO INCREMENT
+    this.autoIncrementFrequency = 100000;   // ** RECEIVES UPGRADES ** 
+    this.autoIncrementTimer = 0;
+    this.autoIncrementUpdater = {
+      tick: (delta) => {
+        this.autoIncrementTimer += delta * 1000; // Convert delta to milliseconds
 
+        if (this.autoIncrementTimer >= this.autoIncrementFrequency) {
+          this.autoIncrementTimer = 0;
+          this.incrementProgress();
+        }
+      }
+    };
+    loop.updatables.push(this.autoIncrementUpdater);
+
+    // HTML ELEMENTS
     this.scoreDisplay = document.getElementById('score-display');
     this.xpDisplay = document.getElementById('xp-display');
     this.levelDisplay = document.getElementById('level-display');
@@ -155,12 +178,12 @@ class World {
     this.raycaster.setFromCamera(this.pointer, camera);
     const intersects = this.raycaster.intersectObjects(scene.children, true);
     for (const hit of intersects) {
-      console.log(hit.object.name);
+      // console.log(hit.object.name);
 
       if (hit.object.name.startsWith('1')) {
+        console.log('Profiler clicked');
+        
         this.incrementProgress();
-        this.incrementXp();
-        this.incrementFunds();
         break;
       }
 
@@ -178,16 +201,8 @@ class World {
 
   }
 
-  incrementProgress() {
-    this.score += 1;
-
-    if (this.scoreDisplay) {
-      this.scoreDisplay.textContent = `Filings Completed: ${this.score}`;
-    }
-  }
-
-  incrementXp() {
-    this.xp += 1;
+  incrementXp(numFilings) {
+    this.xp += numFilings;
 
     if (this.xpDisplay) {
       this.xpDisplay.textContent = `Experience: ${this.xp} / ${this.nextXpNeeded}`;
@@ -204,8 +219,71 @@ class World {
     }
   }
 
-  incrementFunds() {
-    this.funds += 10;
+  incrementProgress() {
+    const numFilings = this.incrementMultiplier;
+    this.score += numFilings;
+
+    this.incrementXp(numFilings);
+    this.incrementFunds(numFilings);
+
+    if (this.scoreDisplay) {
+      this.scoreDisplay.textContent = `Filings Completed: ${this.score}`;
+    }
+    
+    const labelText = `+${this.incrementMultiplier}`;
+    const textSprite = this.createFloatingText(
+        labelText, 
+        new THREE.Vector3(0, 2.6, -1)
+    );
+    
+    scene.add(textSprite);
+    loop.updatables.push(textSprite);
+  }
+  
+  createFloatingText(text, position) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 128;
+
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = '56px Arial';
+    context.fillStyle = 'white';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.copy(position);
+    sprite.scale.set(1.5, 0.75, 1.5); // Adjust scale for visibility
+
+    // Add slight randomized drift
+    const driftX = (Math.random() - 0.5) * 0.5;
+    const driftZ = (Math.random() - 0.5) * 0.5;
+
+    let life = 0;
+    sprite.tick = (delta) => {
+      sprite.position.y += delta * 1.8;
+      sprite.position.x += driftX * delta;
+      sprite.position.z += driftZ * delta;
+      material.opacity -= delta * .9;
+      life += delta;
+      if (life > .9) {
+        scene.remove(sprite);
+        loop.updatables = loop.updatables.filter(item => item !== sprite);
+      }
+    };
+
+    return sprite;
+  }
+
+
+  incrementFunds(numFilings) {
+    this.funds += (this.amountPerFiling * numFilings);
 
     if (this.fundsDisplay) {
       this.fundsDisplay.textContent = `Funds: $${this.funds}`;

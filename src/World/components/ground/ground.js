@@ -13,7 +13,7 @@ async function loadGround() {
   
     const ground = setupModel(groundData);
     
-    ground.position.set(0, 0, -2.5);
+    ground.position.set(0, 0,  -2.5);
 
     return {
       ground,
