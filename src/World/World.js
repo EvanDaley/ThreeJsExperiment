@@ -103,7 +103,10 @@ class World {
     const { arms } = await loadArms({
       activeArmCount: gameState.activeArms,
       speed: gameState.armSpeed,
+      onSwingComplete: () => this.incrementProgress(),
     });
+    arms.updateArmVisibility(gameState.activeArms);
+    
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
