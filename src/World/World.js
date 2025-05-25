@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { gameState } from './state/gameState.js';
 
-import { createFloatingText } from './utils/createFloatingText.js';
+import { spawnFloatingText } from './utils/FloatingTextManager.js';
 
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
@@ -38,18 +38,7 @@ class World {
 
     bindUI(gameState);
 
-    gameState.autoIncrementUpdater = {
-      tick: (delta) => {
-        gameState.autoIncrementTimer += delta * 1000;
-        if (gameState.autoIncrementTimer >= gameState.autoIncrementFrequency) {
-          gameState.autoIncrementTimer = 0;
-          this.incrementProgress();
-        }
-      },
-    };
-    loop.updatables.push(gameState.autoIncrementUpdater);
-
-    container.addEventListener('pointerdown', this.onPointerDown.bind(this));
+    this.setupGameLoop();
   }
 
   createResponsiveScene() {
@@ -81,9 +70,35 @@ class World {
     loop.updatables.push(backgroundParticles);
   }
 
+  setupGameLoop() {
+    gameState.autoIncrementUpdater = {
+      tick: (delta) => {
+        gameState.autoIncrementTimer += delta * 1000;
+        if (gameState.autoIncrementTimer >= gameState.autoIncrementFrequency) {
+          gameState.autoIncrementTimer = 0;
+          this.incrementProgress();
+        }
+      },
+    };
+
+    loop.updatables.push(gameState.autoIncrementUpdater);
+    container.addEventListener('pointerdown', this.onPointerDown.bind(this));
+  }
+
   async init() {
     await loadHDRIEnvironment(renderer, scene);
 
+    const assets = await this.loadAssets();
+
+    this.upgradeManager = new UpgradeManager({ gameState, arms: assets.arms });
+
+    controls.target.copy(assets.robot.position);
+    loop.updatables.push(assets.robot, assets.computer, assets.ground, assets.arms);
+    scene.add(assets.robot, assets.computer, assets.ground, assets.arms);
+    resizer.onResize();
+  }
+
+  async loadAssets() {
     const { robot } = await loadBots();
     const { arms } = await loadArms({
       activeArmCount: gameState.activeArms,
@@ -92,12 +107,7 @@ class World {
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
-    this.upgradeManager = new UpgradeManager({ gameState, arms });
-
-    controls.target.copy(robot.position);
-    loop.updatables.push(robot, computer, ground, arms);
-    scene.add(robot, computer, ground, arms);
-    resizer.onResize();
+    return { robot, arms, computer, ground };
   }
 
   render() {
@@ -148,54 +158,32 @@ class World {
     }
   }
 
-  incrementXp(numFilings) {
-    gameState.xp += numFilings;
-
-    if (gameState.xpDisplay) {
-      gameState.xpDisplay.textContent = `Experience: ${gameState.xp} / ${gameState.nextXpNeeded}`;
-    }
-
-    if (gameState.xp >= gameState.nextXpNeeded) {
-      gameState.nextXpNeeded = Math.floor(gameState.nextXpNeeded * gameState.levelIncrementMultiplier);
-      gameState.xp = 0;
-      gameState.level += 1;
-
-      if (gameState.levelDisplay) {
-        gameState.levelDisplay.textContent = `Mastery Level: ${gameState.level}`;
-      }
-    }
-  }
-
   incrementProgress() {
     const numFilings = gameState.incrementMultiplier;
     gameState.score += numFilings;
 
-    this.incrementXp(numFilings);
     this.incrementFunds(numFilings);
 
     if (gameState.scoreDisplay) {
       gameState.scoreDisplay.textContent = `${gameState.score}`;
     }
 
-    const labelText = `+${numFilings}`;
-    const textSprite = createFloatingText(labelText, new THREE.Vector3(1, 2, 2), loop, scene);
-    scene.add(textSprite);
-    loop.updatables.push(textSprite);
+    spawnFloatingText({
+      label: `+${numFilings}`,
+      loop,
+      scene,
+    });
   }
 
   createTapHint() {
-    const labelText = `TAP THE ROBOT`;
-    const textSprite = createFloatingText(
-        labelText,
-        new THREE.Vector3(1, 2, 2),
-        loop,
-        scene,
-        0.2,
-        70,
-        3
-    );
-    scene.add(textSprite);
-    loop.updatables.push(textSprite);
+    spawnFloatingText({
+      label: `TAP THE ROBOT`,
+      loop,
+      scene,
+      scale: 0.2,
+      maxSize: 70,
+      duration: 3,
+    });
   }
 
   incrementFunds(numFilings) {
