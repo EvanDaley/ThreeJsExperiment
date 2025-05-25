@@ -12,7 +12,7 @@ export const gameState = {
     autoIncrementTimer: 0,
 
     // Score
-    incrementMultiplier: 100,
+    incrementMultiplier: 1,
     score: 0,
     
     // Arms
