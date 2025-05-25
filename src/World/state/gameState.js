@@ -8,12 +8,16 @@ export const gameState = {
     funds: 0,
 
     // Auto increment
-    autoIncrementFrequency: 100000000,
+    autoIncrementFrequency: 100,
     autoIncrementTimer: 0,
 
     // Score
-    incrementMultiplier: 1,
+    incrementMultiplier: 200,
     score: 0,
+    
+    // Arms
+    activeArms: 0,
+    armSpeed: 1,
 
     // Input
     raycaster: new Raycaster(),

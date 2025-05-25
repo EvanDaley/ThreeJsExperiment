@@ -125,7 +125,12 @@ class World {
         });
 
     const { robot } = await loadBots();
-    const { arms } = await loadArms();
+    // const { arms } = await loadArms();
+
+    const { arms } = await loadArms({
+      activeArmCount: gameState.activeArms,
+      speed: gameState.armSpeed,
+    });
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
@@ -203,7 +208,7 @@ class World {
     }
 
     const labelText = `+${numFilings}`;
-    const textSprite = this.createFloatingText(labelText, new THREE.Vector3(0, 2.6, -1));
+    const textSprite = this.createFloatingText(labelText, new THREE.Vector3(1, 2, 2));
 
     scene.add(textSprite);
     loop.updatables.push(textSprite);
@@ -216,8 +221,8 @@ class World {
 
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.font = '75px Helvetica';
-    context.fillStyle = 'grey';
+    context.font = '85px Helvetica';
+    context.fillStyle = 'white';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(text, canvas.width / 2, canvas.height / 2);
