@@ -5,7 +5,7 @@ import { Raycaster, Vector2 } from 'three';
 export const gameState = {
     // Funds
     amountPerFiling: 1,
-    funds: 0,
+    funds: 1000000000000000,
 
     // Auto increment
     autoIncrementFrequency: 100000,
@@ -17,7 +17,8 @@ export const gameState = {
     
     // Arms
     activeArms: 0,
-    armSpeed: 1,
+    armSpeed: .2,
+    cpuLevel: 0,
 
     // Input
     raycaster: new Raycaster(),

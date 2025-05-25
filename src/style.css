@@ -201,3 +201,9 @@ html, body {
 .close-button:hover {
     background: #555;
 }
+
+.upgrade-cta.not-enough {
+    background-color: #a94442 !important;
+    color: white !important;
+    transition: background-color 0.2s;
+}

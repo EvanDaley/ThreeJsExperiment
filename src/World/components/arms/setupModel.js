@@ -5,7 +5,7 @@ function setupModel(data, options = {}) {
     const updatables = [];
 
     const swingDuration = 1.0;
-    const globalSpeed = options.speed || 1.0;
+    let globalSpeed = options.speed || 1.0;
     const maxRotation = Math.PI;
     const baseStagger = 0.15;
     const onSwingComplete = options.onSwingComplete || (() => {});
@@ -18,33 +18,29 @@ function setupModel(data, options = {}) {
     for (let i = 0; i < arms.length; i++) {
         const armMesh = arms[i];
 
-        const baseZ = armMesh.position.z;
-        const baseY = armMesh.position.y;
-        const baseRotationY = armMesh.rotation.y;
+        armMesh.baseZ = armMesh.position.z;
+        armMesh.baseY = armMesh.position.y;
+        armMesh.baseRotationY = armMesh.rotation.y;
 
-        const isLeftArm = armMesh.name.toLowerCase().includes('left');
-        const rotationMultiplier = isLeftArm ? -1 : 1;
+        armMesh.isLeftArm = armMesh.name.toLowerCase().includes('left');
+        armMesh.rotationMultiplier = armMesh.isLeftArm ? -1 : 1;
 
-        const amplitudeFactor = 0.9 + Math.random() * 0.2;
-        const timeOffset = i * baseStagger + Math.random() * 0.05;
-        const localSpeed = globalSpeed * (0.95 + Math.random() * 0.1);
-
-        let lastPhase = 0;
-        let swingTriggered = false;
+        armMesh.amplitudeFactor = 0.9 + Math.random() * 0.2;
+        armMesh.timeOffset = i * baseStagger + Math.random() * 0.05;
+        armMesh.localSpeed = globalSpeed * (0.95 + Math.random() * 0.1);
+        armMesh.swingTriggered = false;
 
         armMesh.tick = (delta, elapsedTime) => {
-            const localTime = (elapsedTime * localSpeed - timeOffset + swingDuration) % swingDuration;
+            const localTime = (elapsedTime * armMesh.localSpeed - armMesh.timeOffset + swingDuration) % swingDuration;
             const t = localTime / swingDuration;
 
-            // Mid-swing: rising past 0.5
-            if (t >= 0.5 && !swingTriggered) {
+            if (t >= 0.5 && !armMesh.swingTriggered) {
                 onSwingComplete();
-                swingTriggered = true;
+                armMesh.swingTriggered = true;
             }
 
-            // Reset trigger for next swing
-            if (t < 0.5 && swingTriggered) {
-                swingTriggered = false;
+            if (t < 0.5 && armMesh.swingTriggered) {
+                armMesh.swingTriggered = false;
             }
 
             let swing;
@@ -54,8 +50,8 @@ function setupModel(data, options = {}) {
                 swing = Math.sin((1 - (t - 0.5) * 2) * Math.PI / 2);
             }
 
-            armMesh.position.z = baseZ + swing * 0.5 * amplitudeFactor;
-            armMesh.rotation.y = baseRotationY + rotationMultiplier * swing * maxRotation * amplitudeFactor;
+            armMesh.position.z = armMesh.baseZ + swing * 0.5 * armMesh.amplitudeFactor;
+            armMesh.rotation.y = armMesh.baseRotationY + armMesh.rotationMultiplier * swing * maxRotation * armMesh.amplitudeFactor;
         };
 
         armControllers.push(armMesh);
@@ -64,7 +60,7 @@ function setupModel(data, options = {}) {
     group.add(armContainer);
 
     group.tick = (delta, elapsedTime) => {
-        armControllers.forEach((arm, i) => {
+        armControllers.forEach((arm) => {
             if (arm.visible) arm.tick(delta, elapsedTime);
         });
     };
@@ -72,6 +68,13 @@ function setupModel(data, options = {}) {
     group.updateArmVisibility = (activeCount) => {
         armControllers.forEach((arm, i) => {
             arm.visible = i < activeCount;
+        });
+    };
+
+    group.updateSpeed = (newSpeed) => {
+        globalSpeed = newSpeed;
+        armControllers.forEach((arm, i) => {
+            arm.localSpeed = newSpeed;
         });
     };
 

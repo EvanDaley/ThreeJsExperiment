@@ -3,7 +3,7 @@
 export class UpgradeManager {
     constructor({ gameState, arms }) {
         this.gameState = gameState;
-        this.arms = arms; // this should be the arms group with updateArmVisibility()
+        this.arms = arms;
         this.modal = document.getElementById('upgrade-modal');
         this.listEl = this.modal.querySelector('.upgrade-list');
         this.upgrades = {};
@@ -43,18 +43,29 @@ export class UpgradeManager {
             card.className = 'upgrade-card';
             card.dataset.upgradeId = upgrade.id;
 
-            card.innerHTML = `
-        <div class="upgrade-level">Lv ${upgrade.level}</div>
-        <div class="upgrade-icon">${upgrade.icon}</div>
-        <div class="upgrade-info">
-          <div class="upgrade-title">${upgrade.title}</div>
-          <button class="upgrade-cta">Upgrade – $${upgrade.cost}</button>
-        </div>
-      `;
+            const currentValue = this.getCurrentUpgradeValue(upgrade.id);
+            const isMaxed = upgrade.max !== undefined && currentValue >= upgrade.max;
 
-            card.querySelector('.upgrade-cta').addEventListener('click', () => {
-                this.applyUpgrade(upgrade.id);
-            });
+            const levelLabel = isMaxed ? `MAX (${upgrade.level})` : `Lv ${upgrade.level}`;
+
+            card.innerHTML = `
+                <div class="upgrade-level">${levelLabel}</div>
+                <div class="upgrade-icon">${upgrade.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-title">${upgrade.title}</div>
+                    ${
+                isMaxed
+                    ? ''
+                    : `<button class="upgrade-cta">Upgrade – $${upgrade.cost}</button>`
+            }
+                </div>
+            `;
+
+            if (!isMaxed) {
+                card.querySelector('.upgrade-cta').addEventListener('click', () => {
+                    this.applyUpgrade(upgrade.id);
+                });
+            }
 
             this.listEl.appendChild(card);
         });
@@ -64,8 +75,20 @@ export class UpgradeManager {
         const upgrade = this.upgrades[id];
         if (!upgrade) return;
 
+        const currentValue = this.getCurrentUpgradeValue(id);
+
+        if (upgrade.max !== undefined && currentValue >= upgrade.max) {
+            console.warn(`Upgrade "${id}" is already at max.`);
+            return;
+        }
+
         if (this.gameState.funds < upgrade.cost) {
-            console.warn('Not enough funds!');
+            const card = this.listEl.querySelector(`[data-upgrade-id="${id}"]`);
+            const button = card?.querySelector('.upgrade-cta');
+            if (button) {
+                button.classList.add('not-enough');
+                setTimeout(() => button.classList.remove('not-enough'), 300);
+            }
             return;
         }
 
@@ -74,22 +97,36 @@ export class UpgradeManager {
         upgrade.level += 1;
 
         // Recalculate cost
-        if (upgrade.costFn) {
-            upgrade.cost = upgrade.costFn(upgrade.level);
-        } else {
-            upgrade.cost = Math.floor(upgrade.baseCost * Math.pow(1.5, upgrade.level - 1));
-        }
+        upgrade.cost = upgrade.costFn
+            ? upgrade.costFn(upgrade.level)
+            : Math.floor(upgrade.baseCost * Math.pow(1.5, upgrade.level - 1));
 
-        // If arms count changed, update visibility
+        // Special behavior hooks
         if (id === 'scale_infra' && this.arms?.updateArmVisibility) {
             this.arms.updateArmVisibility(this.gameState.activeArms);
         }
 
-        // Update funds display
+        if (id === 'boost_cpu' && this.arms?.updateSpeed) {
+            this.arms.updateSpeed(this.gameState.armSpeed);
+        }
+
         if (this.gameState.fundsDisplay) {
             this.gameState.fundsDisplay.textContent = `$${this.gameState.funds}`;
         }
 
-        this.renderUpgrades(); // Rerender modal to reflect changes
+        this.renderUpgrades();
+    }
+
+    getCurrentUpgradeValue(id) {
+        switch (id) {
+            case 'scale_infra':
+                return this.gameState.activeArms;
+            case 'boost_cpu':
+                return this.gameState.cpuLevel;
+            case 'add_threads':
+                return this.gameState.incrementMultiplier;
+            default:
+                return 0;
+        }
     }
 }
