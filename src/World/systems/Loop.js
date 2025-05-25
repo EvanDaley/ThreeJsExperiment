@@ -52,13 +52,16 @@ class Loop {
 
   tick() {
     const delta = clock.getDelta();
-
+    const elapsedTime = clock.getElapsedTime(); // This is what you want for math-based sequencing
 
     for (const object of this.updatables) {
-      object.tick(delta, this.mouseDeltaX, this.mouseDeltaY);
-      this.mouseDeltaX = 0
-      this.mouseDeltaX = 0
+      if (object.tick) {
+        object.tick(delta, elapsedTime, this.mouseDeltaX, this.mouseDeltaY);
+      }
     }
+
+    this.mouseDeltaX = 0;
+    this.mouseDeltaY = 0;
   }
 }
 
