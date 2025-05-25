@@ -33,7 +33,7 @@ function animateEnvelope({ start, end, arcHeight = 1, duration = 1.2 }) {
     env.visible = true;
     env.material.opacity = 1;
 
-    const jitter = () => (Math.random() - 0.5) * 0.4; // ~[-0.2, 0.2]
+    const jitter = () => (Math.random() - 0.5) * 0.3;
 
     // Clone and apply jitter to start and end positions
     const jitteredStart = start.clone().add(new THREE.Vector3(jitter(), jitter(), jitter()));

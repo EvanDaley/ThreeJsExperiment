@@ -48,16 +48,20 @@ export class UpgradeManager {
 
             const levelLabel = isMaxed ? `MAX (${upgrade.level})` : `Lv ${upgrade.level}`;
 
+            const formattedCost = upgrade.cost > 100
+                ? upgrade.cost.toLocaleString()
+                : upgrade.cost;
+
             card.innerHTML = `
                 <div class="upgrade-level">${levelLabel}</div>
                 <div class="upgrade-icon">${upgrade.icon}</div>
                 <div class="upgrade-info">
                     <div class="upgrade-title">${upgrade.title}</div>
                     ${
-                isMaxed
-                    ? ''
-                    : `<button class="upgrade-cta">Upgrade – $${upgrade.cost}</button>`
-            }
+                            isMaxed
+                                ? ''
+                                : `<button class="upgrade-cta">$${formattedCost}</button>`
+                        }
                 </div>
             `;
 

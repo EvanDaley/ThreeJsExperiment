@@ -186,7 +186,7 @@ class World {
     animateEnvelope({
       start: new THREE.Vector3(1.2, -1, 3.5),
       end: new THREE.Vector3(-.9, -1.5, 3.5),
-      arcHeight: 1.4,
+      arcHeight: 2.8,
       duration: 1
     });
   }
