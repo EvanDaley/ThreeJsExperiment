@@ -23,7 +23,7 @@ import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 
 // A hack to see errors on the iPhone
 // Todo: turn this off for production!!
-let devMode = true;
+let devMode = false;
 
 if (devMode) {
   // Create the error overlay container
@@ -88,7 +88,7 @@ class World {
     this.pointer = new Vector2();
 
     // SCORE TRACKING
-    this.incrementMultiplier = 2;   // ** RECEIVES UPGRADES ** 
+    this.incrementMultiplier = 1;   // ** RECEIVES UPGRADES ** 
     this.score = 0;
     
     // AUTO INCREMENT
@@ -107,10 +107,10 @@ class World {
     loop.updatables.push(this.autoIncrementUpdater);
 
     // HTML ELEMENTS
-    this.scoreDisplay = document.getElementById('score-display');
+    this.scoreDisplay = document.getElementById('score-value');
     this.xpDisplay = document.getElementById('xp-display');
     this.levelDisplay = document.getElementById('level-display');
-    this.fundsDisplay = document.getElementById('funds-display');
+    this.fundsDisplay = document.getElementById('funds-value');
 
     container.addEventListener('pointerdown', this.onPointerDown.bind(this));
   }
@@ -152,10 +152,6 @@ class World {
   }
 
   async init() {
-    // const hdri = await import('@pmndrs/assets/hdri/apartment.exr');
-    // const loader = new EXRLoader();
-    // console.error('TEST');
-
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
@@ -198,12 +194,12 @@ class World {
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
   
-    scene.traverse((child) => {
-      if (child.isMesh && child.material && 'envMap' in child.material) {
-        child.material.envMap = envMap;
-        child.material.needsUpdate = true;
-      }
-    });
+    // scene.traverse((child) => {
+    //   if (child.isMesh && child.material && 'envMap' in child.material) {
+    //     child.material.envMap = envMap;
+    //     child.material.needsUpdate = true;
+    //   }
+    // });
   
     controls.target.copy(robot.position);
   
@@ -289,7 +285,7 @@ class World {
     this.incrementFunds(numFilings);
 
     if (this.scoreDisplay) {
-      this.scoreDisplay.textContent = `Filings Completed: ${this.score}`;
+      this.scoreDisplay.textContent = `${this.score}`;
     }
     
     const labelText = `+${this.incrementMultiplier}`;
@@ -304,13 +300,13 @@ class World {
   
   createFloatingText(text, position) {
     const canvas = document.createElement('canvas');
-    canvas.width = 512;
+    canvas.width = 1024;
     canvas.height = 128;
 
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.font = '56px Arial';
-    context.fillStyle = 'white';
+    context.font = '75px Helvetica';
+    context.fillStyle = 'grey';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -332,7 +328,7 @@ class World {
       sprite.position.y += delta * 1.8;
       sprite.position.x += driftX * delta;
       sprite.position.z += driftZ * delta;
-      material.opacity -= delta * .9;
+      material.opacity -= delta * .8;
       life += delta;
       if (life > .9) {
         scene.remove(sprite);
@@ -348,7 +344,7 @@ class World {
     this.funds += (this.amountPerFiling * numFilings);
 
     if (this.fundsDisplay) {
-      this.fundsDisplay.textContent = `Funds: $${this.funds}`;
+      this.fundsDisplay.textContent = `$${this.funds}`;
     }
   }
   

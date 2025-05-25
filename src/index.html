@@ -6,192 +6,64 @@
     <title>ThreeJS Profiler</title>
 </head>
 <body>
-    <div class="html-content-container">
-        <div class="html-content">
-            <!-- TODO: Bring back some kind of title animation -->
-            <!-- <h1>Profiler<br>2025</h1> -->
-            <!-- <p>Sorting filings since 2011</p> -->
-        </div>
-    </div>
 
-    <div id="score-display" style="
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 28px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 15px;
-        border-radius: 8px;
-        z-index: 1000;
-    ">
-        Filings Completed: 0
-    </div>
+<!--<div id="score-display" class="hud-box">-->
+<!--    Filings Completed: 0-->
+<!--</div>-->
 
-    <!-- TODO: If we have time at the end, the XP idea could be fun, but I want to keep the UX simple -->
-    <!-- TODO: Make it look better -->
-    <!-- <div id="level-display" style="
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 28px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 15px;
-        border-radius: 8px;
-        z-index: 100;
-    ">
-        Mastery Level: 1
-    </div> -->
+<!--<div id="funds-display" class="hud-box">-->
+<!--    Funds: 0-->
+<!--</div>-->
 
-    <!-- TODO: Make it look better -->
-    <!-- <div id="xp-display" style="
-        position: absolute;
-        top: 140px;
-        right: 20px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 28px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 15px;
-        border-radius: 8px;
-        z-index: 100;
-    ">
-        Experience: 0 / 5
-    </div> -->
+<div id="score-display" class="hud-box">
+    <span class="hud-label">Filed Filings:</span>
+    <span class="hud-value" id="score-value">0</span>
+</div>
 
-    <div id="funds-display" style="
-        position: absolute;
-        top: 80px;
-        right: 20px;
-        color: white;
-        font-family: sans-serif;
-        font-size: 28px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 15px;
-        border-radius: 8px;
-        z-index: 1000;
-    ">
-        Funds: 0
-    </div>
+<div id="funds-display" class="hud-box">
+    <span class="hud-label">Funds:</span>
+    <span class="hud-value" id="funds-value">0</span>
+</div>
 
-    <!-- I was going to add an HTML button to open an upgrade menu, but I think I want to try putting it in the 3d scene -->
-    <!-- <button id="boost-button" style="
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 15px;
-        font-size: 16px;
-        z-index: 100;
-    ">
-        Upgrades
-    </button> -->
-
-
-    <div id="upgrade-modal" style="
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 200;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(4px);
-">
-    <div style="
-        background: #1e1e1e;
-        color: #fff;
-        padding: 30px 40px;
-        border-radius: 12px;
-        max-width: 420px;
-        width: 90%;
-        font-family: 'Segoe UI', sans-serif;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        text-align: center;
-    ">
-        <h2 style="margin-bottom: 20px; font-size: 24px; border-bottom: 1px solid #444; padding-bottom: 10px;">
-            🛠️ Upgrades
-        </h2>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-            <li style="margin-bottom: 15px;">
-                <button style="
-                    width: 100%;
-                    padding: 12px 20px;
-                    background: #292929;
-                    color: #fff;
-                    border: 1px solid #555;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    cursor: pointer;
-                    transition: background 0.2s ease;
-                " onmouseover="this.style.background='#333'" onmouseout="this.style.background='#292929'">
+<div id="upgrade-modal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">🛠️ Upgrades</h2>
+        <ul class="upgrade-list">
+            <li>
+                <button class="upgrade-button">
                     ⚡ Scale Up Infrastructure – $100
                 </button>
             </li>
-            <li style="margin-bottom: 15px;">
-                <button style="
-                    width: 100%;
-                    padding: 12px 20px;
-                    background: #292929;
-                    color: #fff;
-                    border: 1px solid #555;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    cursor: pointer;
-                    transition: background 0.2s ease;
-                " onmouseover="this.style.background='#333'" onmouseout="this.style.background='#292929'">
+            <li>
+                <button class="upgrade-button">
                     📈 Improve Captcha Solving Speed – $10
-                    
                 </button>
             </li>
             <li>
-                <button style="
-                    width: 100%;
-                    padding: 12px 20px;
-                    background: #292929;
-                    color: #fff;
-                    border: 1px solid #555;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    cursor: pointer;
-                    transition: background 0.2s ease;
-                " onmouseover="this.style.background='#333'" onmouseout="this.style.background='#292929'">
+                <button class="upgrade-button">
                     💼 Add Filing Jurisdiction – $50
                 </button>
             </li>
         </ul>
-        <button id="close-upgrade-modal" style="
-            margin-top: 25px;
-            padding: 10px 20px;
-            background: #444;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        " onmouseover="this.style.background='#555'" onmouseout="this.style.background='#444'">
+        <button id="close-upgrade-modal" class="close-button">
             Close
         </button>
     </div>
 </div>
 
 
-    <div id="webgl-scene-container"></div>
+
+
+<div id="webgl-scene-container"></div>
 </body>
 </html>
 
 <script>
     document.getElementById('close-upgrade-modal')?.addEventListener('click', () => {
-      const modal = document.getElementById('upgrade-modal');
-      if (modal) {
-        modal.style.display = 'none';
-      }
+        const modal = document.getElementById('upgrade-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     });
-  </script>
+</script>
   
