@@ -8,7 +8,7 @@ export const gameState = {
     funds: 0,
 
     // Auto increment
-    autoIncrementFrequency: 10,
+    autoIncrementFrequency: 100000,
     autoIncrementTimer: 0,
 
     // Score
@@ -16,8 +16,8 @@ export const gameState = {
     score: 0,
     
     // Arms
-    activeArms: 8,
-    armSpeed: 5,
+    activeArms: 0,
+    armSpeed: 1,
 
     // Input
     raycaster: new Raycaster(),
@@ -37,3 +37,6 @@ export const gameState = {
     level: 1,
 
 };
+
+// #466154FF
+// #9EDABDFF
