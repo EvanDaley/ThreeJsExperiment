@@ -32,40 +32,131 @@ html, body {
     place-content: center;
 }
 
-.html-content {
-    display: flex;
-    gap: 5em;
-    width: 100%;
-    padding-top: 3em;
-    position: relative;
-}
-
-.html-content::before {
-    content: '';
+.hud-box {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border-bottom: 1px solid white;
-    transform: scaleX(1);
+    left: 20px; /* changed from right: 20px */
+    background: rgba(0, 0, 0, 0.6);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-family: sans-serif;
+    color: #fff;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 24px;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
 }
 
-h1 {
-    font-size: 4rem;
-    width: 50vw;
-    line-height: 97%;
+
+#score-display {
+    top: 20px;
+}
+
+#funds-display {
+    top: 80px;
+}
+
+.hud-label {
+    min-width: 130px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.hud-value {
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 0.5px;
+    min-width: 100px;
     text-align: right;
 }
 
-h1, p {
-    flex-basis: 0;
-    flex-grow: 1;
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+
+#score-display {
+    top: 20px;
 }
 
-p {
-    font-size: 1.4rem;
-    width: 40vw;
+#funds-display {
+    top: 80px;
 }
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: #1e1e1e;
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 90%;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+.modal-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.upgrade-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.upgrade-list li {
+    margin-bottom: 15px;
+}
+
+.upgrade-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: #292929;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.upgrade-button:hover {
+    background: #333;
+}
+
+.close-button {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.close-button:hover {
+    background: #555;
+}
+
+
 
 /*# sourceMappingURL=main.css.map*/
