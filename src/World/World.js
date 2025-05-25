@@ -100,13 +100,15 @@ class World {
 
   async loadAssets() {
     const { robot } = await loadBots();
+    this.robot = robot;
+
     const { arms } = await loadArms({
       activeArmCount: gameState.activeArms,
       speed: gameState.armSpeed,
       onSwingComplete: () => this.incrementProgress(),
     });
     arms.updateArmVisibility(gameState.activeArms);
-    
+
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
@@ -166,6 +168,8 @@ class World {
     gameState.score += numFilings;
 
     this.incrementFunds(numFilings);
+
+    this.robot.triggerHeadBounce();
 
     if (gameState.scoreDisplay) {
       gameState.scoreDisplay.textContent = `${gameState.score}`;
