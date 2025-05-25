@@ -7,13 +7,13 @@ export const gameState = {
     amountPerFiling: 10,
     funds: 0,
 
+    // Auto increment
+    autoIncrementFrequency: 100000000,
+    autoIncrementTimer: 0,
+
     // Score
     incrementMultiplier: 1,
     score: 0,
-
-    // Auto increment
-    autoIncrementFrequency: 100000,
-    autoIncrementTimer: 0,
 
     // Input
     raycaster: new Raycaster(),

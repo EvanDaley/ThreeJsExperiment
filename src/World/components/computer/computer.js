@@ -13,7 +13,7 @@ async function loadComputer() {
   
     const computer = setupModel(computerData);
     
-    computer.position.set(0, 0, -2.5);
+    computer.position.set(0, 0, 0);
 
     return {
       computer,
