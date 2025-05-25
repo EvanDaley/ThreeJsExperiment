@@ -20,6 +20,7 @@ import { Loop } from './systems/Loop.js';
 import { UpgradeManager } from './systems/UpgradeManager.js';
 import { bindUI } from './systems/UIBinder.js';
 import { loadHDRIEnvironment } from './systems/environment.js';
+import { initEnvelopePool, animateEnvelope } from './utils/EnvelopeAnimator.js';
 
 let camera, renderer, scene, loop, controls, ground, container, resizer;
 
@@ -87,6 +88,7 @@ class World {
 
   async init() {
     await loadHDRIEnvironment(renderer, scene);
+    initEnvelopePool(scene);
 
     const assets = await this.loadAssets();
 
@@ -179,6 +181,13 @@ class World {
       label: `+${numFilings}`,
       loop,
       scene,
+    });
+
+    animateEnvelope({
+      start: new THREE.Vector3(1.2, -1, 3.5),
+      end: new THREE.Vector3(-.9, -1.5, 3.5),
+      arcHeight: 1.4,
+      duration: 1
     });
   }
 
