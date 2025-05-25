@@ -6,6 +6,8 @@ function setupModel(data) {
 
     for (let i = 0; i < data.scene.children.length; i++) {
         const model = data.scene.children[i];
+        console.log('here')
+
         const clip = data.animations[i];
 
         model.tick = (delta) => { };
@@ -33,6 +35,7 @@ function setupModel(data) {
         // group.rotation.y += radiansPerSecond * delta;
     };
 
+    // console.log(group)
 
     return group;
 }

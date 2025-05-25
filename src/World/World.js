@@ -3,6 +3,7 @@ import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
 
 import { loadBots } from './components/bots/bots.js';
+import { loadArms } from './components/arms/arms.js';
 import { loadComputer } from './components/computer/computer.js';
 import { loadGround } from './components/ground/ground.js';
 
@@ -124,13 +125,14 @@ class World {
         });
 
     const { robot } = await loadBots();
+    const { arms } = await loadArms();
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
     controls.target.copy(robot.position);
 
-    loop.updatables.push(robot, computer, ground);
-    scene.add(robot, computer, ground);
+    loop.updatables.push(robot, computer, ground, arms);
+    scene.add(robot, computer, ground, arms);
 
     resizer.onResize();
   }

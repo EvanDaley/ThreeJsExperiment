@@ -34,7 +34,6 @@ html, body {
 
 .hud-box {
     position: absolute;
-    left: 20px; /* changed from right: 20px */
     background: rgba(0, 0, 0, 0.6);
     padding: 12px 20px;
     border-radius: 10px;
@@ -42,21 +41,13 @@ html, body {
     color: #fff;
     display: flex;
     gap: 10px;
+    left: 20px; /* changed from right: 20px */
     align-items: center;
     font-size: 24px;
     line-height: 1.2;
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
-}
-
-
-#score-display {
-    top: 20px;
-}
-
-#funds-display {
-    top: 80px;
 }
 
 .hud-label {
@@ -156,7 +147,5 @@ html, body {
 .close-button:hover {
     background: #555;
 }
-
-
 
 /*# sourceMappingURL=main.css.map*/
