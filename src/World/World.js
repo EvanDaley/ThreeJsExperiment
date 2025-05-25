@@ -127,19 +127,19 @@ class World {
     const { robot } = await loadBots();
     // const { arms } = await loadArms();
 
-    // const { arms } = await loadArms({
-    //   activeArmCount: gameState.activeArms,
-    //   speed: gameState.armSpeed,
-    // });
+    const { arms } = await loadArms({
+      activeArmCount: gameState.activeArms,
+      speed: gameState.armSpeed,
+    });
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
 
     controls.target.copy(robot.position);
 
-    // loop.updatables.push(robot, computer, ground, arms);
-    // scene.add(robot, computer, ground, arms);
-    loop.updatables.push(robot, computer, ground);
-    scene.add(robot, computer, ground);
+    loop.updatables.push(robot, computer, ground, arms);
+    scene.add(robot, computer, ground, arms);
+    // loop.updatables.push(robot, computer, ground);
+    // scene.add(robot, computer, ground);
 
     resizer.onResize();
   }
