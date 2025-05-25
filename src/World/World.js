@@ -1,9 +1,11 @@
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
+
 import { loadBots } from './components/bots/bots.js';
 import { loadComputer } from './components/computer/computer.js';
 import { loadGround } from './components/ground/ground.js';
+
 import { createGround } from './components/ground.js';
 import { createBackgroundParticles } from './components/particles';
 

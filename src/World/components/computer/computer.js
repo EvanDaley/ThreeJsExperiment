@@ -9,8 +9,6 @@ async function loadComputer() {
       loader.loadAsync('models/Computer.glb'),
     ]);
   
-    console.log('loading computer!', computerData);
-  
     const computer = setupModel(computerData);
     
     computer.position.set(0, 0, 0);

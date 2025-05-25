@@ -9,8 +9,6 @@ async function loadBots() {
       loader.loadAsync('models/ChadRobot.glb'),
     ]);
   
-    console.log('load!', robotData);
-  
     const robot = setupModel(robotData);
     
     robot.position.set(0, 0, 0);

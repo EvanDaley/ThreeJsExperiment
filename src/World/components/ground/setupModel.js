@@ -4,14 +4,8 @@ function setupModel(data) {
     const group = new Group()
     const updatables = []
 
-    console.log('DATA')
-    console.log(data)
     for (let i = 0; i < data.scene.children.length; i++) {
         const model = data.scene.children[i];
-
-        console.log(model.name)
-        console.log(model)
-        console.log('here')
 
         const clip = data.animations[i];
 
@@ -39,9 +33,6 @@ function setupModel(data) {
         // group.rotation.x += radiansPerSecond * delta;
         // group.rotation.y += radiansPerSecond * delta;
     };
-
-    console.log('group')
-    console.log(group)
 
     return group;
 }

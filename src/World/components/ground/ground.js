@@ -9,8 +9,6 @@ async function loadGround() {
       loader.loadAsync('models/Ground.glb'),
     ]);
   
-    console.log('loading ground!', groundData);
-  
     const ground = setupModel(groundData);
     
     ground.position.set(0, 0, 0);
