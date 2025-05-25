@@ -14,7 +14,8 @@ import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 import { Vector3 } from 'three';
 import * as THREE from 'three';
-import { PMREMGenerator } from 'three';
+// import { PMREMGenerator } from 'three';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
 
 import { Raycaster, Vector2 } from 'three';
@@ -151,27 +152,45 @@ class World {
   }
 
   async init() {
-    const hdri = await import('@pmndrs/assets/hdri/apartment.exr');
-    const loader = new EXRLoader();
-    console.error('TEST');
+    // const hdri = await import('@pmndrs/assets/hdri/apartment.exr');
+    // const loader = new EXRLoader();
+    // console.error('TEST');
 
-    // const pmremGenerator = new PMREMGenerator(renderer);
-    // pmremGenerator.compileEquirectangularShader();
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
 
-    loader.load(
-        hdri.default,
-        (texture) => {
-          texture.mapping = THREE.EquirectangularReflectionMapping;
-          scene.environment = texture;
-          scene.background = texture;
-          console.log('HDRI loaded successfully');
-        },
-        undefined,
-        (err) => {
-          console.error('HDRI load failed:', err);
-          document.body.innerHTML = `<div style="color:red;">HDRI load failed: ${err.message || err}</div>`;
-        }
-    );
+    const rendererCapabilities = renderer.capabilities;
+    const supportsHalfFloat = rendererCapabilities.isWebGL2 || rendererCapabilities.getExtension('OES_texture_half_float');
+
+    const dataType = supportsHalfFloat ? THREE.HalfFloatType : THREE.UnsignedByteType;
+
+    new RGBELoader()
+        .setDataType(dataType)
+        .load('texture_sets/studio_small_09_2k.hdr', (hdrTexture) => {
+          // const envMap = pmremGenerator.fromEquirectangular(hdrTexture).texture;
+          hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
+          
+          scene.environment = hdrTexture;
+          scene.background = hdrTexture;
+
+          // hdrTexture.dispose();
+          pmremGenerator.dispose();
+        });
+
+    // loader.load(
+    //     hdri.default,
+    //     (texture) => {
+    //       texture.mapping = THREE.EquirectangularReflectionMapping;
+    //       scene.environment = texture;
+    //       scene.background = texture;
+    //       console.log('HDRI loaded successfully');
+    //     },
+    //     undefined,
+    //     (err) => {
+    //       console.error('HDRI load failed:', err);
+    //       document.body.innerHTML = `<div style="color:red;">HDRI load failed: ${err.message || err}</div>`;
+    //     }
+    // );
 
     console.error('TEST 2');
 
