@@ -19,7 +19,7 @@ function setupModel(data, options = {}) {
         const armMesh = arms[i];
 
         armMesh.baseZ = armMesh.position.z;
-        armMesh.baseY = armMesh.position.y;
+        armMesh.baseY = armMesh.position.y - .5;
         armMesh.baseRotationY = armMesh.rotation.y;
 
         armMesh.isLeftArm = armMesh.name.toLowerCase().includes('left');
@@ -34,12 +34,12 @@ function setupModel(data, options = {}) {
             const localTime = (elapsedTime * armMesh.localSpeed - armMesh.timeOffset + swingDuration) % swingDuration;
             const t = localTime / swingDuration;
 
-            if (t >= 0.5 && !armMesh.swingTriggered) {
+            if (t >= 0.3 && !armMesh.swingTriggered) {
                 onSwingComplete();
                 armMesh.swingTriggered = true;
             }
 
-            if (t < 0.5 && armMesh.swingTriggered) {
+            if (t < 0.3 && armMesh.swingTriggered) {
                 armMesh.swingTriggered = false;
             }
 

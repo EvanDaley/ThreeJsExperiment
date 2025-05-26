@@ -49,20 +49,6 @@ html, body {
     z-index: 1000;
 }
 
-.hud-label {
-    min-width: 130px;
-    font-weight: 600;
-    opacity: 0.85;
-}
-
-.hud-value {
-    font-weight: bold;
-    font-size: 28px;
-    letter-spacing: 0.5px;
-    min-width: 100px;
-    text-align: right;
-}
-
 #score-display {
     top: 20px;
 }
@@ -206,4 +192,41 @@ html, body {
     background-color: #a94442 !important;
     color: white !important;
     transition: background-color 0.2s;
+}
+
+.hud-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 1000;
+}
+
+.hud-box {
+    background: #1C2B40; /* deep navy */
+    padding: 10px 20px;
+    border-radius: 12px;
+    color: #FFC857; /* warm yellow */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 240px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    border: 1px solid #2F3F5E;
+}
+
+.hud-label {
+    color: #AAB8C2; /* muted blue-gray */
+    font-weight: 500;
+}
+
+.hud-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00B8C6; /* aqua */
 }
