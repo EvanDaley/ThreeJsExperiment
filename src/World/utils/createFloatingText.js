@@ -8,7 +8,7 @@ export function createFloatingText(text, position, loop, scene, speed = 1.8, fon
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = `${fontSize}px Helvetica`;
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'green';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, canvas.width / 2, canvas.height / 2);

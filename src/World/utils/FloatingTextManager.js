@@ -3,7 +3,7 @@ import { createFloatingText } from './createFloatingText.js';
 
 export function spawnFloatingText({
                                       label,
-                                      position = new THREE.Vector3(1, 2, 2),
+                                      position = new THREE.Vector3(1, 1.8, 2),
                                       loop,
                                       scene,
                                       speed,
