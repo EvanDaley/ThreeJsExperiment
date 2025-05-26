@@ -6,7 +6,7 @@ const pool = [];
 let sceneRef = null;
 
 function createEnvelopeMesh() {
-    const geom = new THREE.BoxGeometry(0.4, 0.2, 0.05); // simple envelope-like box
+    const geom = new THREE.BoxGeometry(0.5, 0.25, 0.05); // simple envelope-like box
     const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true });
     const mesh = new THREE.Mesh(geom, mat);
     mesh.visible = false;
@@ -33,11 +33,18 @@ function animateEnvelope({ start, end, arcHeight = 1, duration = 1.2 }) {
     env.visible = true;
     env.material.opacity = 1;
 
-    const jitter = () => (Math.random() - 0.5) * 0.3;
+    // Apply *more* jitter to the start, *less* to the end
+    const strongJitter = () => (Math.random() - 0.5) * 2;   // larger random offset
+    const mildJitter = () => (Math.random() - 0.5) * 0.2;   // subtle offset
 
-    // Clone and apply jitter to start and end positions
-    const jitteredStart = start.clone().add(new THREE.Vector3(jitter(), jitter(), jitter()));
-    const jitteredEnd = end.clone().add(new THREE.Vector3(jitter(), jitter(), jitter()));
+    const jitteredStart = start.clone().add(new THREE.Vector3(
+        strongJitter(), mildJitter(), mildJitter()
+    ));
+
+    const jitteredEnd = end.clone().add(new THREE.Vector3(
+        mildJitter(), mildJitter(), mildJitter()
+    ));
+
     const jitteredArcHeight = arcHeight + (Math.random() - 0.5) * 0.2;
 
     env.position.copy(jitteredStart);
@@ -66,6 +73,7 @@ function animateEnvelope({ start, end, arcHeight = 1, duration = 1.2 }) {
         }
     });
 }
+
 
 
 export { initEnvelopePool, animateEnvelope };

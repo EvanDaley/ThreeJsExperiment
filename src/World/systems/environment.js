@@ -20,7 +20,7 @@ export async function loadHDRIEnvironment(renderer, scene, path = 'texture_sets/
             .load(path, (hdrTexture) => {
                 hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
                 scene.environment = hdrTexture;
-                scene.background = hdrTexture;
+                scene.background = new THREE.Color('#d1eaea');
 
                 pmremGenerator.dispose();
                 resolve();
