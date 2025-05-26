@@ -35,6 +35,18 @@ export class UpgradeManager {
         this.modal.style.display = 'none';
     }
 
+    showUpgradePopup(message = "UPGRADED!") {
+        console.log("showing upgrade popup")
+        
+        const popup = document.getElementById('upgrade-popup');
+        if (!popup) return;
+
+        popup.textContent = message;
+        popup.classList.remove('show'); // reset if it's still animating
+        void popup.offsetWidth; // force reflow
+        popup.classList.add('show');
+    }
+
     renderUpgrades() {
         this.listEl.innerHTML = '';
 
@@ -117,6 +129,13 @@ export class UpgradeManager {
         if (this.gameState.fundsDisplay) {
             this.gameState.fundsDisplay.textContent = `$${this.gameState.funds}`;
         }
+
+        if (upgrade.max !== undefined && this.getCurrentUpgradeValue(id) + 1 > upgrade.max) {
+            this.showUpgradePopup('MAXED!!!');
+        } else {
+            this.showUpgradePopup(upgrade.message || 'UPGRADED!');
+        }
+
 
         this.renderUpgrades();
     }

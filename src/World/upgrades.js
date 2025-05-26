@@ -9,6 +9,7 @@
         apply: (gameState) => {
             gameState.activeArms += 1;
         },
+        message: 'ARM ADDED!',
     },
     {
         id: 'boost_cpu',
@@ -21,6 +22,7 @@
             gameState.cpuLevel += 1;
             gameState.armSpeed += 0.1;
         },
+        message: 'CPU BOOSTED!',
     },
     {
         id: 'add_threads',
@@ -32,5 +34,6 @@
         apply: (gameState) => {
             gameState.incrementMultiplier += 1;
         },
+        message: 'THREAD ADDED!',
     }
 ];

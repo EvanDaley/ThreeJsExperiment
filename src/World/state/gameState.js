@@ -8,7 +8,7 @@ export const gameState = {
     
     // Funds
     amountPerFiling: 1,
-    funds: 0,
+    funds: 999999999,
 
     // Auto increment
     autoIncrementFrequency: 100000,

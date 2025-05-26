@@ -332,3 +332,40 @@ html, body {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+.upgrade-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 64px;
+    font-weight: bold;
+    color: #00ffcc;
+    text-shadow: 2px 2px 12px #000;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.upgrade-popup.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+    animation: popupFade 1.5s ease-out forwards;
+}
+
+@keyframes popupFade {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    70% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
