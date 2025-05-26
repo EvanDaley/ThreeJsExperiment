@@ -98,6 +98,29 @@ class World {
     loop.updatables.push(assets.robot, assets.computer, assets.ground, assets.arms);
     scene.add(assets.robot, assets.computer, assets.ground, assets.arms);
     resizer.onResize();
+
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+    this.showStartModal();
+  }
+
+  showStartModal() {
+    const modal = document.getElementById('start-modal');
+    const input = document.getElementById('player-name');
+    const button = document.getElementById('start-button');
+
+    modal.style.display = 'flex';
+    input.focus();
+
+    button.addEventListener('click', () => {
+      const name = input.value.trim();
+      if (name) {
+        gameState.playerName = name;
+        modal.style.display = 'none';
+        this.start(); // start game loop once name is set
+      }
+    });
   }
 
   async loadAssets() {

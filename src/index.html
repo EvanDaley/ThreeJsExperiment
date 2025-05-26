@@ -7,6 +7,10 @@
 </head>
 <body>
 
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
 <div id="score-display" class="hud-box">
     <span class="hud-label">Filed Filings:</span>
     <span class="hud-value" id="score-value">0</span>
@@ -15,6 +19,15 @@
 <div id="funds-display" class="hud-box">
     <span class="hud-label">Funds:</span>
     <span class="hud-value" id="funds-value">0</span>
+</div>
+
+<div id="start-modal" class="start-modal">
+    <div class="start-modal-content">
+        <h1 class="start-title">🧾 Help Pro-Filer Complete This Year's Filings</h1>
+        <p class="start-subtitle">Enter your name to begin</p>
+        <input type="text" id="player-name" class="start-input" placeholder="Your name..." />
+        <button id="start-button" class="start-button">Let’s Go!</button>
+    </div>
 </div>
 
 <div id="upgrade-modal" class="modal">

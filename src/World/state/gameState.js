@@ -3,6 +3,9 @@
 import { Raycaster, Vector2 } from 'three';
 
 export const gameState = {
+    // Player
+    playerName: '',
+    
     // Funds
     amountPerFiling: 1,
     funds:11110,

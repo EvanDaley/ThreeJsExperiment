@@ -230,3 +230,105 @@ html, body {
     font-weight: bold;
     color: #00B8C6; /* aqua */
 }
+
+
+.start-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #004488, #001122);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.start-modal-content {
+    background: #fff8e1;
+    border: 5px solid #ff6600;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
+    animation: popIn 0.5s ease-out;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.start-title {
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+}
+
+.start-subtitle {
+    font-size: 1.2rem;
+    color: #004488;
+    margin-bottom: 20px;
+}
+
+.start-input {
+    font-size: 1.1rem;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+    border: 2px solid #004488;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.start-button {
+    background-color: #ff6600;
+    color: white;
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.start-button:hover {
+    background-color: #e65c00;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #001122;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #ff6600;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
