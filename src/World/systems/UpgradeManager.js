@@ -6,6 +6,8 @@ export class UpgradeManager {
         this.arms = arms;
         this.modal = document.getElementById('upgrade-modal');
         this.listEl = this.modal.querySelector('.upgrade-list');
+        this.popupEl = document.getElementById('upgrade-popup');
+        this.closeBtnId = 'close-upgrade-modal';
         this.upgrades = {};
 
         upgradeDefinitions.forEach((def) => {
@@ -13,6 +15,7 @@ export class UpgradeManager {
                 ...def,
                 level: 1,
                 cost: def.costFn ? def.costFn(1) : def.baseCost,
+                _cardEl: null, // cache DOM node here
             };
         });
 
@@ -20,10 +23,23 @@ export class UpgradeManager {
     }
 
     initEventListeners() {
-        const closeBtn = this.modal.querySelector('#close-upgrade-modal');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.hideModal());
-        }
+        this.modal.addEventListener('click', (e) => {
+            const target = e.target;
+
+            // Close modal
+            if (target.id === this.closeBtnId) {
+                this.hideModal();
+            }
+
+            // Upgrade button
+            if (target.classList.contains('upgrade-cta')) {
+                const card = target.closest('.upgrade-card');
+                const upgradeId = card?.dataset.upgradeId;
+                if (upgradeId) {
+                    this.applyUpgrade(upgradeId);
+                }
+            }
+        });
     }
 
     showModal() {
@@ -35,56 +51,50 @@ export class UpgradeManager {
         this.modal.style.display = 'none';
     }
 
-    showUpgradePopup(message = "UPGRADED!") {
-        console.log("showing upgrade popup")
-        
-        const popup = document.getElementById('upgrade-popup');
-        if (!popup) return;
+    showUpgradePopup(message = 'UPGRADED!') {
+        if (!this.popupEl) return;
 
-        popup.textContent = message;
-        popup.classList.remove('show'); // reset if it's still animating
-        void popup.offsetWidth; // force reflow
-        popup.classList.add('show');
+        this.popupEl.textContent = message;
+        this.popupEl.classList.remove('show');
+        setTimeout(() => this.popupEl.classList.add('show'), 10);
     }
 
     renderUpgrades() {
         this.listEl.innerHTML = '';
-
         Object.values(this.upgrades).forEach((upgrade) => {
-            const card = document.createElement('div');
-            card.className = 'upgrade-card';
-            card.dataset.upgradeId = upgrade.id;
-
-            const currentValue = this.getCurrentUpgradeValue(upgrade.id);
-            const isMaxed = upgrade.max !== undefined && currentValue >= upgrade.max;
-
-            const levelLabel = isMaxed ? `MAX (${upgrade.level})` : `Lv ${upgrade.level}`;
-
-            const formattedCost = upgrade.cost > 100
-                ? upgrade.cost.toLocaleString()
-                : upgrade.cost;
-
-            card.innerHTML = `
-                <div class="upgrade-level">${levelLabel}</div>
-                <div class="upgrade-icon">${upgrade.icon}</div>
-                <div class="upgrade-info">
-                    <div class="upgrade-title">${upgrade.title}</div>
-                    ${
-                            isMaxed
-                                ? ''
-                                : `<button class="upgrade-cta">$${formattedCost}</button>`
-                        }
-                </div>
-            `;
-
-            if (!isMaxed) {
-                card.querySelector('.upgrade-cta').addEventListener('click', () => {
-                    this.applyUpgrade(upgrade.id);
-                });
-            }
-
+            const card = this.renderUpgradeCard(upgrade);
             this.listEl.appendChild(card);
         });
+    }
+
+    renderUpgradeCard(upgrade) {
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+        card.dataset.upgradeId = upgrade.id;
+
+        const currentValue = this.getCurrentUpgradeValue(upgrade.id);
+        const isMaxed = upgrade.max !== undefined && currentValue >= upgrade.max;
+        const levelLabel = isMaxed ? `MAX (${upgrade.level})` : `Lv ${upgrade.level}`;
+        const formattedCost =
+            upgrade.cost > 100 ? upgrade.cost.toLocaleString() : upgrade.cost;
+
+        card.innerHTML = `
+      <div class="upgrade-level">${levelLabel}</div>
+      <div class="upgrade-icon">${upgrade.icon}</div>
+      <div class="upgrade-info">
+        <div class="upgrade-title">${upgrade.title}</div>
+        ${
+            isMaxed
+                ? ''
+                : `<button class="upgrade-cta">$${formattedCost}</button>`
+        }
+      </div>
+    `;
+
+        // Cache DOM node for later fast access
+        upgrade._cardEl = card;
+
+        return card;
     }
 
     applyUpgrade(id) {
@@ -94,12 +104,11 @@ export class UpgradeManager {
         const currentValue = this.getCurrentUpgradeValue(id);
 
         if (upgrade.max !== undefined && currentValue >= upgrade.max) {
-            console.warn(`Upgrade "${id}" is already at max.`);
             return;
         }
 
         if (this.gameState.funds < upgrade.cost) {
-            const card = this.listEl.querySelector(`[data-upgrade-id="${id}"]`);
+            const card = upgrade._cardEl;
             const button = card?.querySelector('.upgrade-cta');
             if (button) {
                 button.classList.add('not-enough');
@@ -112,12 +121,11 @@ export class UpgradeManager {
         upgrade.apply(this.gameState);
         upgrade.level += 1;
 
-        // Recalculate cost
         upgrade.cost = upgrade.costFn
             ? upgrade.costFn(upgrade.level)
             : Math.floor(upgrade.baseCost * Math.pow(1.5, upgrade.level - 1));
 
-        // Special behavior hooks
+        // Hooks
         if (id === 'scale_infra' && this.arms?.updateArmVisibility) {
             this.arms.updateArmVisibility(this.gameState.activeArms);
         }
@@ -130,14 +138,20 @@ export class UpgradeManager {
             this.gameState.fundsDisplay.textContent = `$${this.gameState.funds}`;
         }
 
-        if (upgrade.max !== undefined && this.getCurrentUpgradeValue(id) + 1 > upgrade.max) {
-            this.showUpgradePopup('MAXED!!!');
-        } else {
-            this.showUpgradePopup(upgrade.message || 'UPGRADED!');
+        const message =
+            upgrade.max !== undefined &&
+            this.getCurrentUpgradeValue(id) + 1 > upgrade.max
+                ? 'MAXED!!!'
+                : upgrade.message || 'UPGRADED!';
+
+        this.showUpgradePopup(message);
+
+        // Replace just the affected card
+        const oldCard = upgrade._cardEl;
+        if (oldCard) {
+            const newCard = this.renderUpgradeCard(upgrade);
+            this.listEl.replaceChild(newCard, oldCard);
         }
-
-
-        this.renderUpgrades();
     }
 
     getCurrentUpgradeValue(id) {
