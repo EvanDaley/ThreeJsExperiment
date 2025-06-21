@@ -15,7 +15,7 @@ async function initThreeJSWorld() {
   await world.init()
 
   // start the three.js animation loop
-  world.start();
+  // world.start();
 }
 async function initContentAnimations() {
   gsap.registerPlugin(ScrollTrigger, CSSRulePlugin);

@@ -24,6 +24,8 @@ import { initEnvelopePool, animateEnvelope } from './utils/EnvelopeAnimator.js';
 
 let camera, renderer, scene, loop, controls, ground, container, resizer;
 
+document.devMode = true;
+
 class World {
   constructor(targetElement) {
     container = targetElement;
@@ -109,7 +111,6 @@ class World {
     const modal = document.getElementById('start-modal');
     const input = document.getElementById('player-name');
     const button = document.getElementById('start-button');
-
     modal.style.display = 'flex';
     input.focus();
 
@@ -121,6 +122,15 @@ class World {
         this.start(); // start game loop once name is set
       }
     });
+
+    // Skip start menu if we are in dev mode
+    console.log(document.devMode)
+    if (document.devMode) {
+      modal.style.display = 'none';
+      this.start(); // start game loop once name is set
+
+    }
+
   }
 
   async loadAssets() {
@@ -156,6 +166,7 @@ class World {
 
   startTapHintLoop() {
     if (this.tapHintStopped) return;
+    this.createTapHint();
 
     this.tapHintInterval = setInterval(() => {
       if (gameState.score < 3) {

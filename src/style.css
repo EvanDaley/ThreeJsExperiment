@@ -30,31 +30,38 @@ html, body {
     display: grid;
     place-content: center;
 }
-
 .hud-box {
     position: absolute;
-    background: rgba(0, 0, 0, 0.6);
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5) !important;
     padding: 12px 20px;
-    border-radius: 10px;
+    border: none !important;
+    border-radius: 0 !important;
     font-family: sans-serif;
     color: #fff;
     display: flex;
+    justify-content: center; /* Center contents */
     gap: 10px;
-    left: 20px;
     align-items: center;
     font-size: 24px;
     line-height: 1.2;
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 1000;
+    white-space: normal;
+    flex-wrap: wrap;
+    width: 100%;
+
 }
 
+
+
+
 #score-display {
-    top: 20px;
+    top: 70px;
 }
 
 #funds-display {
-    top: 80px;
+    top: 20px;
 }
 
 /* Modal */
@@ -205,13 +212,14 @@ html, body {
 }
 
 .hud-box {
-    background: #1C2B40; /* deep navy */
+    background: #1C2B40;
     padding: 10px 20px;
     border-radius: 12px;
-    color: #FFC857; /* warm yellow */
+    color: #FFC857;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* center items horizontally */
     align-items: center;
+    gap: 10px; /* space between label and value */
     font-family: 'Segoe UI', sans-serif;
     font-size: 16px;
     font-weight: 600;
@@ -219,6 +227,7 @@ html, body {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
     border: 1px solid #2F3F5E;
 }
+
 
 .hud-label {
     color: #AAB8C2; /* muted blue-gray */
