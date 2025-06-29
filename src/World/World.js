@@ -37,7 +37,7 @@ class World {
     this.createLights();
     this.createGameSystems();
     this.createSceneObjects();
-    this.createParticleSystems();
+    // this.createParticleSystems();
 
     bindUI(gameState);
 

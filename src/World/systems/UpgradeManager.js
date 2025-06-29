@@ -23,8 +23,10 @@ export class UpgradeManager {
     }
 
     initEventListeners() {
-        this.modal.addEventListener('click', (e) => {
+        this.modal.addEventListener('pointerdown', (e) => {
             const target = e.target;
+
+            console.log('modal clicked')
 
             // Close modal
             if (target.id === this.closeBtnId) {

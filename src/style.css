@@ -84,7 +84,8 @@ html, body {
 }
 
 .modal-content {
-    background: #1e1e1e;
+    /*background: #1e1e1e;*/
+    background: rgba(30, 30, 30, 0.2);
     color: #fff;
     padding: 30px 40px;
     border-radius: 12px;
