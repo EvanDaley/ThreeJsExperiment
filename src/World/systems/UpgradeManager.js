@@ -1,7 +1,7 @@
 ﻿import { upgrades as upgradeDefinitions } from '../upgrades.js';
 import { SaveManager } from './SaveManager.js';
 export class UpgradeManager {
-    constructor({ gameState, arms, existingUpgrades }) {
+    constructor({ gameState, arms }) {
         this.gameState = gameState;
         this.arms = arms;
         this.modal = document.getElementById('upgrade-modal');
@@ -10,31 +10,45 @@ export class UpgradeManager {
         this.closeBtnId = 'close-upgrade-modal';
         this.upgrades = {};
 
-        console.log('existingUpgrades', JSON.stringify(existingUpgrades));
-
-        this.setUpgradeLevels(existingUpgrades);
+        this.initUpgradeDefinitions();
 
         this.initEventListeners();
     }
 
-    setUpgradeLevels(existingUpgrades, previousSave = {}) {
+    initUpgradeDefinitions() {
         upgradeDefinitions.forEach((def) => {
-            const savedLevel = previousSave[def.id] ?? 1;
-
-            const upgrade = {
+            this.upgrades[def.id] = {
                 ...def,
-                level: savedLevel,
-                cost: def.costFn ? def.costFn(savedLevel) : def.baseCost,
+                level: 1,
+                cost: def.costFn ? def.costFn(1) : def.baseCost,
+                _cardEl: null,
+            };
+        });
+    }
+
+    setUpgradeLevels(savedValues = {}) {
+        // console.log('upgrades', JSON.stringify(savedValues));
+
+        // Munge in data from previous save, if it exists
+        Object.values(this.upgrades).forEach((def) => {
+            // console.log('def', def)
+            const saved = savedValues[def.id];
+            const level = saved?.level ?? 1;
+            const cost = saved?.cost ?? 1;
+
+            console.log(def.id)
+
+            this.upgrades[def.id] = {
+                ...def,
+                level,
+                cost,
                 _cardEl: null,
             };
 
-            // Re-apply effects based on saved level
-            for (let i = 1; i < savedLevel; i++) {
-                def.apply(this.gameState);
-            }
-
-            this.upgrades[def.id] = upgrade;
+            console.log('level', level)
         });
+
+        console.log('upgrades', this.upgrades);
     }
 
     getUpgradeRawData() {

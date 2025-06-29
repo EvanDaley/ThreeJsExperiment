@@ -102,8 +102,14 @@ class World {
     });
 
     SaveManager.load(gameState, this.upgradeManager);
-    console.log('loaded')
-    console.log(JSON.stringify(gameState))
+    // console.log('loaded')
+    // console.log(JSON.stringify(gameState))
+
+    // Refresh arm state after loading
+    assets.arms.updateArmVisibility(gameState.activeArms);
+    assets.arms.updateSpeed(gameState.armSpeed);
+
+    this.upgradeManager.renderUpgrades()
 
     this.incrementProgress()
 
@@ -155,6 +161,7 @@ class World {
       onSwingComplete: () => this.incrementProgress(),
     });
     arms.updateArmVisibility(gameState.activeArms);
+    arms.updateSpeed(gameState.armSpeed);
 
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
@@ -177,11 +184,11 @@ class World {
   }
 
   startTapHintLoop() {
-    if (this.tapHintStopped || gameState.score > 3) return;
+    if (this.tapHintStopped || gameState.score > 6) return;
     this.createTapHint();
 
     this.tapHintInterval = setInterval(() => {
-      if (gameState.score < 3) {
+      if (gameState.score < 6) {
         this.createTapHint();
       } else {
         clearInterval(this.tapHintInterval);

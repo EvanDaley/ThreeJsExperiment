@@ -22,7 +22,7 @@ function save(gameState, upgradeManager) {
             upgradeData: upgradeManager.getUpgradeRawData()
         };
 
-        console.log('saving', JSON.stringify(data))
+        console.warn('SAVING', JSON.stringify(data))
 
         localStorage.setItem(SAVE_KEY, JSON.stringify(data));
         console.log('[SaveManager] Game saved.');
@@ -44,9 +44,9 @@ function load(gameState, upgradeManager) {
             console.log(gameState)
         }
 
-        if  (data.upgradeData) {
+        if  (data['upgradeData']) {
             console.log('[SaveManager] Loading upgrade data.');
-            // upgradeManager.setUpgradeLevels(data.upgradeData)
+            upgradeManager.setUpgradeLevels(data['upgradeData'])
         }
 
         console.log('[SaveManager] Game loaded.');

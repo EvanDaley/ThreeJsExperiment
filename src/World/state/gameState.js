@@ -19,7 +19,7 @@ export const gameState = {
     score: 0,
     
     // Arms
-    activeArms: 0,
+    activeArms: 1,
     armSpeed: .2,
     cpuLevel: 0,
 
