@@ -75,6 +75,8 @@ function setupModel(data, options = {}) {
 
     group.updateArmVisibility = (activeCount) => {
         armControllers.forEach((arm, i) => {
+            arm.visible = false;
+
             setTimeout(() => {
                 arm.visible = i < activeCount;
             }, i * 30); // stagger activation by 30ms to avoid lag when the button is clicked

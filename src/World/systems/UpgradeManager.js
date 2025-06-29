@@ -1,7 +1,7 @@
 ﻿import { upgrades as upgradeDefinitions } from '../upgrades.js';
-
+import { SaveManager } from './SaveManager.js';
 export class UpgradeManager {
-    constructor({ gameState, arms }) {
+    constructor({ gameState, arms, existingUpgrades }) {
         this.gameState = gameState;
         this.arms = arms;
         this.modal = document.getElementById('upgrade-modal');
@@ -10,17 +10,47 @@ export class UpgradeManager {
         this.closeBtnId = 'close-upgrade-modal';
         this.upgrades = {};
 
-        upgradeDefinitions.forEach((def) => {
-            this.upgrades[def.id] = {
-                ...def,
-                level: 1,
-                cost: def.costFn ? def.costFn(1) : def.baseCost,
-                _cardEl: null, // cache DOM node here
-            };
-        });
+        console.log('existingUpgrades', JSON.stringify(existingUpgrades));
+
+        this.setUpgradeLevels(existingUpgrades);
 
         this.initEventListeners();
     }
+
+    setUpgradeLevels(existingUpgrades, previousSave = {}) {
+        upgradeDefinitions.forEach((def) => {
+            const savedLevel = previousSave[def.id] ?? 1;
+
+            const upgrade = {
+                ...def,
+                level: savedLevel,
+                cost: def.costFn ? def.costFn(savedLevel) : def.baseCost,
+                _cardEl: null,
+            };
+
+            // Re-apply effects based on saved level
+            for (let i = 1; i < savedLevel; i++) {
+                def.apply(this.gameState);
+            }
+
+            this.upgrades[def.id] = upgrade;
+        });
+    }
+
+    getUpgradeRawData() {
+        // const result = {};
+        // for (const [id, upgrade] of Object.entries(this.upgrades)) {
+        //     result[id] = {
+        //         level: upgrade.level,
+        //         cost: upgrade.cost,
+        //     };
+        // }
+        // console.log('result', result)
+
+        // Just return everything :D
+        return this.upgrades;
+    }
+
 
     initEventListeners() {
         this.modal.addEventListener('pointerdown', (e) => {
@@ -154,6 +184,9 @@ export class UpgradeManager {
             const newCard = this.renderUpgradeCard(upgrade);
             this.listEl.replaceChild(newCard, oldCard);
         }
+
+        SaveManager.save(this.gameState, this);
+
     }
 
     getCurrentUpgradeValue(id) {

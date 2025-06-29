@@ -21,6 +21,7 @@ import { UpgradeManager } from './systems/UpgradeManager.js';
 import { bindUI } from './systems/UIBinder.js';
 import { loadHDRIEnvironment } from './systems/environment.js';
 import { initEnvelopePool, animateEnvelope } from './utils/EnvelopeAnimator.js';
+import { SaveManager } from './systems/SaveManager.js';
 
 let camera, renderer, scene, loop, controls, ground, container, resizer;
 
@@ -94,7 +95,14 @@ class World {
 
     const assets = await this.loadAssets();
 
-    this.upgradeManager = new UpgradeManager({ gameState, arms: assets.arms });
+    this.upgradeManager = new UpgradeManager({
+      gameState,
+      arms: assets.arms,
+    });
+
+    SaveManager.load(gameState, this.upgradeManager);
+
+
 
     controls.target.copy(assets.robot.position);
     loop.updatables.push(assets.robot, assets.computer, assets.ground, assets.arms);
@@ -165,7 +173,7 @@ class World {
   }
 
   startTapHintLoop() {
-    if (this.tapHintStopped) return;
+    if (this.tapHintStopped || gameState.score > 3) return;
     this.createTapHint();
 
     this.tapHintInterval = setInterval(() => {
