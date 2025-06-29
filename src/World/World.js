@@ -90,10 +90,11 @@ class World {
   }
 
   async init() {
-    await loadHDRIEnvironment(renderer, scene);
     initEnvelopePool(scene);
+    resizer.onResize();
 
     const assets = await this.loadAssets();
+
 
     this.upgradeManager = new UpgradeManager({
       gameState,
@@ -101,13 +102,16 @@ class World {
     });
 
     SaveManager.load(gameState, this.upgradeManager);
+    console.log('loaded')
+    console.log(JSON.stringify(gameState))
 
+    this.incrementProgress()
 
 
     controls.target.copy(assets.robot.position);
     loop.updatables.push(assets.robot, assets.computer, assets.ground, assets.arms);
     scene.add(assets.robot, assets.computer, assets.ground, assets.arms);
-    resizer.onResize();
+    await loadHDRIEnvironment(renderer, scene);
 
     const loadingOverlay = document.getElementById('loading-overlay');
     if (loadingOverlay) loadingOverlay.style.display = 'none';

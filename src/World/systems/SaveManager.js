@@ -39,14 +39,18 @@ function load(gameState, upgradeManager) {
         const data = JSON.parse(json);
 
         if (data.gameData) {
+            console.log('[SaveManager] Loading game data.');
             Object.assign(gameState, data.gameData);
+            console.log(gameState)
         }
 
         if  (data.upgradeData) {
-            upgradeManager.setUpgradeLevels(data.upgradeData)
+            console.log('[SaveManager] Loading upgrade data.');
+            // upgradeManager.setUpgradeLevels(data.upgradeData)
         }
 
         console.log('[SaveManager] Game loaded.');
+        console.log(data);
     } catch (e) {
         console.error('[SaveManager] Load failed:', e);
     }
