@@ -126,10 +126,9 @@ class World {
 
     this.incrementProgress()
 
-
     controls.target.copy(assets.robot.position);
-    loop.updatables.push(assets.robot, assets.computer, assets.ground, assets.arms);
-    scene.add(assets.robot, assets.computer, assets.ground, assets.arms);
+    loop.updatables.push(assets.robot, assets.computer, assets.arms);
+    scene.add(assets.robot, assets.computer, assets.arms, assets.ground);
     await loadHDRIEnvironment(renderer, scene);
 
     const loadingOverlay = document.getElementById('loading-overlay');
