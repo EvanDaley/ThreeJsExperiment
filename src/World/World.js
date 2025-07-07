@@ -26,7 +26,7 @@ import { SaveManager } from './systems/SaveManager.js';
 
 let camera, renderer, scene, loop, controls, ground, container, resizer;
 
-document.devMode = true;
+document.devMode = false;
 
 class World {
   constructor(targetElement) {
@@ -144,23 +144,24 @@ class World {
     modal.style.display = 'flex';
     input.focus();
 
-    button.addEventListener('click', () => {
-      const name = input.value.trim();
-      if (name) {
-        gameState.playerName = name;
-        modal.style.display = 'none';
-        this.start(); // start game loop once name is set
-      }
-    });
+    console.log('name', gameState.playerName)
 
-    // Skip start menu if we are in dev mode
-    console.log(document.devMode)
-    if (document.devMode) {
+    const skipStartScreen = gameState.playerName || document.devMode
+
+    if (skipStartScreen)
+    {
       modal.style.display = 'none';
       this.start(); // start game loop once name is set
-
+    } else {
+      button.addEventListener('click', () => {
+        const name = input.value.trim();
+        if (name) {
+          gameState.playerName = name;
+          modal.style.display = 'none';
+          this.start(); // start game loop once name is set
+        }
+      });
     }
-
   }
 
   async loadAssets() {
