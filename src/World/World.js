@@ -89,7 +89,19 @@ class World {
     container.addEventListener('pointerdown', this.onPointerDown.bind(this));
   }
 
+  startAutosave() {
+    if (this.autosaveInterval) clearInterval(this.autosaveInterval);
+
+    this.autosaveInterval = setInterval(() => {
+      SaveManager.save(gameState, this.upgradeManager);
+      console.log('[Autosave] Game state saved');
+    }, 25000); // 25 seconds
+  }
+
   async init() {
+    this.autosaveInterval = null;
+    this.startAutosave();
+
     initEnvelopePool(scene);
     resizer.onResize();
 
