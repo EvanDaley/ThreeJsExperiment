@@ -4,11 +4,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { setupModel } from './setupModel.js';
 
-async function loadGround() {
+async function loadBackWall() {
     const loader = new GLTFLoader();
   
     const [groundData] = await Promise.all([
-      loader.loadAsync('models/Ground.glb'),
+      loader.loadAsync('models/BackWall.glb'),
     ]);
   
     const ground = setupModel(groundData);
@@ -20,4 +20,4 @@ async function loadGround() {
     };
   }
 
-export { loadGround };
+export { loadBackWall };

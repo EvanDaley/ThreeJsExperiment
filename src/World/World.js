@@ -11,6 +11,7 @@ import { loadBots } from './components/bots/bots.js';
 import { loadArms } from './components/arms/arms.js';
 import { loadComputer } from './components/computer/computer.js';
 import { loadGround } from './components/ground/ground.js';
+// import { loadBackWall } from './components/backWall/ground.js';
 import { createBackgroundParticles } from './components/particles';
 
 import { createControls } from './systems/controls.js';
@@ -177,6 +178,7 @@ class World {
 
     const { computer } = await loadComputer();
     const { ground } = await loadGround();
+    // const { backWall } = await loadBackWall();
 
     return { robot, arms, computer, ground };
   }

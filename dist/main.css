@@ -30,32 +30,90 @@ html, body {
     display: grid;
     place-content: center;
 }
-
 .hud-box {
     position: absolute;
-    background: rgba(0, 0, 0, 0.6);
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5) !important;
     padding: 12px 20px;
-    border-radius: 10px;
+    border: none !important;
+    border-radius: 0 !important;
     font-family: sans-serif;
     color: #fff;
     display: flex;
+    justify-content: center; /* Center contents */
     gap: 10px;
-    left: 20px;
     align-items: center;
     font-size: 24px;
     line-height: 1.2;
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    white-space: normal;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+
+
+
+
+.hud-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     z-index: 1000;
 }
 
-#score-display {
-    top: 20px;
+.hud-box {
+    background: #1C2B40;
+    padding: 10px 20px;
+    border-radius: 12px;
+    color: #FFC857;
+    display: flex;
+    justify-content: center; /* center items horizontally */
+    align-items: center;
+    gap: 10px; /* space between label and value */
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 240px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    border: 1px solid #2F3F5E;
 }
 
-#funds-display {
-    top: 80px;
+.hud-funds {
+    font-size: 42px;
+    font-weight: bold;
+    color: #00B8C6; /* aqua */
 }
+
+.hud-label {
+    color: #AAB8C2; /* muted blue-gray */
+    font-weight: 500;
+}
+
+.hud-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00B8C6; /* aqua */
+}
+
+
+#funds-display {
+    top: 70px;
+}
+
+
+#score-display {
+    top: 144px;
+}
+
+
+
+
+
 
 /* Modal */
 .modal {
@@ -73,7 +131,8 @@ html, body {
 }
 
 .modal-content {
-    background: #1e1e1e;
+    /*background: #1e1e1e;*/
+    background: rgba(30, 30, 30, 0.2);
     color: #fff;
     padding: 30px 40px;
     border-radius: 12px;
@@ -194,43 +253,6 @@ html, body {
     transition: background-color 0.2s;
 }
 
-.hud-container {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    z-index: 1000;
-}
-
-.hud-box {
-    background: #1C2B40; /* deep navy */
-    padding: 10px 20px;
-    border-radius: 12px;
-    color: #FFC857; /* warm yellow */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    min-width: 240px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-    border: 1px solid #2F3F5E;
-}
-
-.hud-label {
-    color: #AAB8C2; /* muted blue-gray */
-    font-weight: 500;
-}
-
-.hud-value {
-    font-size: 22px;
-    font-weight: bold;
-    color: #00B8C6; /* aqua */
-}
-
 
 .start-modal {
     position: fixed;
@@ -337,7 +359,8 @@ html, body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%);
+    will-change: opacity, transform;
     font-size: 64px;
     font-weight: bold;
     color: #00ffcc;
@@ -345,13 +368,12 @@ html, body {
     z-index: 9999;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease;
     font-family: 'Segoe UI', sans-serif;
 }
 
 .upgrade-popup.show {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
     animation: popupFade 1.5s ease-out forwards;
 }
 
